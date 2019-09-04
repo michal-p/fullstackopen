@@ -1,0 +1,66 @@
+Created in https://www.websequencediagrams.com/
+0.4
+  title Create a new note
+
+  Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+  Server->Browser: The server responds with HTTP status code 302 and redirect to Location in http header
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+  Server->Browser: HTML-code
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+  Server->Browser: main.css
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+  Server-->Browser: main.js
+
+  note over Browser:
+  browser starts executing js-code
+  that requests JSON data from server 
+  end note
+
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+  Server-->Browser: [{ content: Your new message, date: current_date }, ...]
+
+  note over Browser:
+  browser executes the event handler
+  that renders notes to display
+  end note
+  
+0.5
+  title Go to Single Page Application(SPA) page
+
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+  Server->Browser: HTML-code
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+  Server->Browser: main.css
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+  Server-->Browser: spa.js
+
+  note over Browser:
+  browser starts executing js-code
+  that requests JSON data from server 
+  end note
+
+  Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+  Server-->Browser: [{ content: Your new message, date: current_date }, ...]
+
+  note over Browser:
+  browser executes the event handler
+  that renders notes to display
+  end note
+  
+0.6
+  title New note at Single page application(SPA)
+
+  note over Browser:
+  User submit a form:
+  e.preventDefault() - prevent the default handling of form submit,
+  the default method would send the data to server and cause a redirect
+
+  onSubmit handler - redraw notes and run to Server HTTP POST req.
+  end note
+
+  Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+  note over Server:
+  JSON-data containing both the content of the note (content) and the timestamp (date):
+  The Content-Type header Content-type: application/json data is represented in the JSON format.
+  end note
