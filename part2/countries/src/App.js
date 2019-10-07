@@ -11,7 +11,8 @@ const Filter = ({value, handler}) => {
   )
 }
 
-const Countries = ({countries}) => {
+const Countries = ({countries, handler}) => {
+
   if(countries.length === 1) {
     // const countryObj = {
     //   name: countries[0].name,
@@ -55,7 +56,14 @@ const Countries = ({countries}) => {
       })
     )
   } else if(countries.length < 10) {
-    return countries.map(country => <p key={country.numericCode}>{country.name}</p>)
+    return countries.map(country => {
+      return(
+        <p key={country.numericCode}>
+          <span>{country.name}</span>
+          <button value={country.name} onClick={handler}>show</button>
+        </p>
+      )
+    })
   } else {
     return <p>Too many matches, specify another filter</p>
   }
@@ -79,19 +87,11 @@ function App() {
 
   let filteredCountries = countries.filter(country => country.name.toUpperCase().includes(newFilter.toUpperCase()))
 
-  // const getCountries = (what = newFilter) => {
-  //   if(filteredCountries.length < 10) {
-  //     return filteredCountries
-  //   } else {
-  //     throw("Too many matches, specify another filter")
-  //   }
-  // }
-
   return (
     <>
       <Filter value={newFilter} handler={handleFilter} />
       <h3>Countries</h3>
-      <Countries countries={filteredCountries} />  
+      <Countries countries={filteredCountries}  handler={handleFilter}/>  
     </>
   );
 }
