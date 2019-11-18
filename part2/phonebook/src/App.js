@@ -31,9 +31,13 @@ const App = () => {
     Object.keys(personObject).forEach(key => {
       if(personObject[key].length === 0) return alert(`"${key}" is missing!`)
     })
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
   }
   const handleNewName = (event) => {
     setNewName(event.target.value)
