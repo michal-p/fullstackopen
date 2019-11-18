@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personsService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -12,15 +12,14 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log("promise fulfilled")
-        setPersons(response.data)
+    personsService
+      .getAll()
+      .then(initPersons => {
+        setPersons(initPersons)
       })
   }, [])
   console.log('render', persons.length, 'notes')
-
+  
   const addPerson = (event) => {
     event.preventDefault()
     if(persons.filter(p => p.name === newName).length) return alert(`Name "${newName}" has already exist!`)
@@ -31,10 +30,10 @@ const App = () => {
     Object.keys(personObject).forEach(key => {
       if(personObject[key].length === 0) return alert(`"${key}" is missing!`)
     })
-    axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+    personsService
+      .create(personObject)
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson))
         setNewName('')
         setNewNumber('')
       })
@@ -50,7 +49,6 @@ const App = () => {
   const handleFilter = (event) => {
     setNewFilter(event.target.value)
   }
-
   let filteredPersons = persons.filter(p => p.name.toUpperCase().includes(newFilter.toUpperCase()))
 
   return (
