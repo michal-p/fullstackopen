@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import noteService from './services/note'
+import notesService from './services/notes'
 import Note from './components/Note'
 
 const App = (props) => {
@@ -8,7 +8,7 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
-    noteService
+    notesService
       .getAll()
         .then(initialNotes => {
           setNotes(initialNotes)
@@ -22,7 +22,7 @@ const App = (props) => {
   const toggleImportance = (id) => {
     const note = notes.find(n => n.id === id)
     const changedNote = {...note, important: !note.important}//Objects merge
-    noteService
+    notesService
       .update(id, changedNote)
         .then(returnedNote => {
           setNotes(notes.map(note => note.id !== id ? note : returnedNote))
@@ -49,7 +49,7 @@ const App = (props) => {
       id: notes.length + 1,
     }
 
-    noteService
+    notesService
       .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
