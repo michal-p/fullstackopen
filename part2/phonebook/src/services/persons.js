@@ -17,10 +17,10 @@ const create = (newPerson) => {
 	})
 }
 
-const erase = (id) => {
+const erase = (id, name) => {
 	const request = axios.delete(`${baseUrl}/${id}`)
 	return request.then(response => {
-		alert("deleted")
+		window.confirm(`Delete ${name}?`)
 		return response.data
 	})
 }

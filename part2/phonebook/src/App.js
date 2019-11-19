@@ -39,9 +39,9 @@ const App = () => {
       })
   }
 
-  const deletePerson = (id) => {
+  const deletePerson = (id, name) => {
     personsService
-      .erase(id)
+      .erase(id, name)
       .then(response => setPersons(persons.filter(person => person.id !== id)))
   }
 
