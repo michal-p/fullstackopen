@@ -22,27 +22,57 @@ const App = () => {
   
   const addPerson = (event) => {
     event.preventDefault()
-    if(persons.filter(p => p.name === newName).length) return alert(`Name "${newName}" has already exist!`)
-    const personObject = {
-      name: newName,
-      number: newNumber
-    }
-    Object.keys(personObject).forEach(key => {
-      if(personObject[key].length === 0) return alert(`"${key}" is missing!`)
-    })
-    personsService
-      .create(personObject)
-      .then(newPerson => {
-        setPersons(persons.concat(newPerson))
-        setNewName('')
-        setNewNumber('')
+    let personObject = persons.find(p => p.name === newName)
+    let doService = true
+    if(!!personObject ) {
+      personObject.number = newNumber
+      Object.keys(personObject).forEach(key => {
+        if(personObject[key].length === 0) {
+          alert(`"${key}" is missing!`)
+          doService = false
+        }
       })
+      if(doService && window.confirm(`${personObject.name} is already in phonebook, replace the old number with new one?`)) {
+        personsService
+          .update(personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== personObject.id ? person : returnedPerson))
+          })
+      }
+    } else {
+      personObject = {
+        name: newName,
+        number: newNumber
+      }
+      Object.keys(personObject).forEach(key => {
+        if(personObject[key].length === 0) {
+          alert(`"${key}" is missing!`)
+          doService = false
+        }
+      })
+      if(doService) {
+        personsService
+          .create(personObject)
+          .then(newPerson => {
+            setPersons(persons.concat(newPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+
+    }
   }
 
   const deletePerson = (id, name) => {
-    personsService
-      .erase(id, name)
-      .then(response => setPersons(persons.filter(person => person.id !== id)))
+    if(window.confirm(`Delete ${name}?`)) {
+      personsService
+        .erase(id, name)
+        .then(response => setPersons(persons.filter(person => person.id !== id)))
+        .catch(error => {
+          alert(`The person ${name} has been already deleted.`)
+          setPersons(persons.filter(p => p.id !== id))
+        })
+    }
   }
 
   const handleNewName = (event) => {

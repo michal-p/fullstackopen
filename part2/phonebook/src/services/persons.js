@@ -20,9 +20,13 @@ const create = (newPerson) => {
 const erase = (id, name) => {
 	const request = axios.delete(`${baseUrl}/${id}`)
 	return request.then(response => {
-		window.confirm(`Delete ${name}?`)
 		return response.data
 	})
 }
 
-export default {getAll, create, erase}
+const update = (newPerson) => {
+	const request = axios.put(`${baseUrl}/${newPerson.id}`, newPerson)
+	return request.then(response => response.data)
+}
+
+export default {getAll, create, erase, update}
