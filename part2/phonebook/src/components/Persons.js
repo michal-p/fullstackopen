@@ -1,7 +1,8 @@
 import React from 'react'
 import Name from './Name'
 
-const Persons = ({persons}) => 
-  persons.map(person => <Name key={person.name} name={person.name} number={person.number}/>)
+
+const Persons = ({persons, deletePerson}) => 
+  persons.map(person => <Name key={person.name} name={person.name} number={person.number} deletePerson={() => deletePerson(person.id)}/>)
 
 export default Persons

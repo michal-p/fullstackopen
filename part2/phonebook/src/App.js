@@ -38,6 +38,13 @@ const App = () => {
         setNewNumber('')
       })
   }
+
+  const deletePerson = (id) => {
+    personsService
+      .erase(id)
+      .then(response => setPersons(persons.filter(person => person.id !== id)))
+  }
+
   const handleNewName = (event) => {
     setNewName(event.target.value)
   }
@@ -57,7 +64,7 @@ const App = () => {
       <Filter newFilter={newFilter} handleFilter={handleFilter} />
       <PersonForm addPerson={addPerson} newName={newName} handleNewName={handleNewName} newNumber={newNumber} handleNewNumber={handleNewNumber} />
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} deletePerson={deletePerson}/>
       <div>debug: {newName}</div>
     </div>
   )
