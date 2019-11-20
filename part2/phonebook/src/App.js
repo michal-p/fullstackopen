@@ -5,21 +5,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Notification from './components/Notification'
-
-const Footer = () => {
-  const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  }
-
-  return (
-    <div style={footerStyle}>
-      <br />
-      <em>Note app, Department of Computer Science, University of Helsinki 2019</em>
-    </div> 
-  )
-}
+import Footer from './components/Footer'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
