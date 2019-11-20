@@ -53,7 +53,11 @@ const App = () => {
         personsService
           .update(personObject)
           .then(returnedPerson => {
-            showHideNotification(`${personObject.name} has a new number.`, 'note')
+            showHideNotification(`${returnedPerson.name} has a new number.`, 'note')
+          })
+          .catch(error => {
+            showHideNotification(`The person ${personObject.name} does not exist.`, 'error')
+            setPersons(persons.filter(p => p.id !== personObject.id))
           })
       }
     } else {
@@ -75,6 +79,9 @@ const App = () => {
             setPersons(persons.concat(newPerson))
             setNewName('')
             setNewNumber('')
+          })
+          .catch(error => {
+            showHideNotification(`The person ${personObject.name} is not possible to create.`, 'error')
           })
       }
 
