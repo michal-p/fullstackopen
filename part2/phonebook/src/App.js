@@ -1,15 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import personsService from './services/persons'
+import './index.css'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
+
+const Footer = () => {
+  const footerStyle = {
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 16
+  }
+
+  return (
+    <div style={footerStyle}>
+      <br />
+      <em>Note app, Department of Computer Science, University of Helsinki 2019</em>
+    </div> 
+  )
+}
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [ persons, setPersons ] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
+  const [ notificationMessage, setNotificationMessage] = useState(null)
+  const [ type, setType ] = useState('note')
+  //TODO tu by som mal taku otazku na niekoho skusenejsieho ci sa to da 
+  //robit aj inaksie ako stale vytvarat useState. Popripade ak je to ok, 
+  //tak ci to nie je problem mat vela useState.
 
+  //Dalej useEffect vyuzivam iba tu na ostatnych asynchronnych volaniach nie preco???
   useEffect(() => {
     console.log('effect')
     personsService
@@ -19,6 +42,14 @@ const App = () => {
       })
   }, [])
   console.log('render', persons.length, 'notes')
+
+  const showHideNotification = (message, type) => {
+    setNotificationMessage(message)
+    setType(type)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000);
+  }
   
   const addPerson = (event) => {
     event.preventDefault()
@@ -36,7 +67,7 @@ const App = () => {
         personsService
           .update(personObject)
           .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== personObject.id ? person : returnedPerson))
+            showHideNotification(`${personObject.name} has a new number.`, 'note')
           })
       }
     } else {
@@ -54,6 +85,7 @@ const App = () => {
         personsService
           .create(personObject)
           .then(newPerson => {
+            showHideNotification(`${newPerson.name} has been created.`, 'note')
             setPersons(persons.concat(newPerson))
             setNewName('')
             setNewNumber('')
@@ -67,9 +99,12 @@ const App = () => {
     if(window.confirm(`Delete ${name}?`)) {
       personsService
         .erase(id, name)
-        .then(response => setPersons(persons.filter(person => person.id !== id)))
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== id))
+          showHideNotification(`${name} has been deleted.`, 'note')
+        })
         .catch(error => {
-          alert(`The person ${name} has been already deleted.`)
+          showHideNotification(`The person ${name} has been already deleted.`, 'error')
           setPersons(persons.filter(p => p.id !== id))
         })
     }
@@ -91,11 +126,13 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} type={type} />
       <Filter newFilter={newFilter} handleFilter={handleFilter} />
       <PersonForm addPerson={addPerson} newName={newName} handleNewName={handleNewName} newNumber={newNumber} handleNewNumber={handleNewNumber} />
       <h2>Numbers</h2>
       <Persons persons={filteredPersons} deletePerson={deletePerson}/>
       <div>debug: {newName}</div>
+      <Footer />
     </div>
   )
 }
