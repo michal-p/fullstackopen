@@ -66,10 +66,7 @@ const App = () => {
         number: newNumber
       }
       Object.keys(personObject).forEach(key => {
-        if(personObject[key].length === 0) {
-          alert(`"${key}" is missing!`)
-          doService = false
-        }
+        doService = doService && key.length && personObject[key]
       })
       if(doService) {
         personsService
@@ -83,6 +80,8 @@ const App = () => {
           .catch(error => {
             showHideNotification(`The person ${personObject.name} is not possible to create.`, 'error')
           })
+      } else {
+        showHideNotification(`The person ${personObject.name} has missing parameters.`, 'error')
       }
 
     }
