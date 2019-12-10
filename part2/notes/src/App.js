@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './index.css'
-import noteService from './services/notes'
+import notesService from './services/notes'
 import Note from './components/Note'
 import Notification from './components/Notification'
 import Footer from './components/Footer'
