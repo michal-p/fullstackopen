@@ -78,7 +78,7 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
-            showHideNotification(`The person ${personObject.name} is not possible to create.`, 'error')
+            showHideNotification(`The person ${personObject.name} is not possible to create: ${error.response.data.error}.`, 'error')
           })
       } else {
         showHideNotification(`The person ${personObject.name} has missing parameters.`, 'error')
