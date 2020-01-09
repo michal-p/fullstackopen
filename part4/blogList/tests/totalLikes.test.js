@@ -92,5 +92,13 @@ describe('the favouritest blog', () => {
     expect(result).toEqual(first)
   })
 })
+
+describe('the most active blogger', () => {
+  const activeBlogger = { author: 'Edsger W. Dijkstra', blogs: 3 }
+  test('is', () => {
+    const result = listHelper.mostBlogs(listOfBlogs)
+    expect(result).toEqual(activeBlogger)
+  })
+})
 // Tutorial how to run only one test
 // https://jestjs.io/docs/en/api.html#testonlyname-fn-timeout
