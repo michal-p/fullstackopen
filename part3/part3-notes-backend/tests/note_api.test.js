@@ -7,16 +7,19 @@ var helper = require('../tests/test_helper');
 
 beforeEach(async () => {
   await Note.deleteMany({})
+  console.log('cleared')
 
-  let noteObject = new Note(helper.initialNotes[0])
-  await noteObject.save()
-
-  noteObject = new Note(helper.initialNotes[1])
-  await noteObject.save()
+  for (let note of helper.initialNotes) {
+    let noteObject = new Note(note)
+    await noteObject.save()
+    console.log('saved')
+  }
+  console.log('done')
 })
 
 //methods provided by supertest for verifying the status code and headers
 test('notes are returned as json', async () => {
+  console.log('entered test')
   await api
     .get('/api/notes')
     .expect(200)
