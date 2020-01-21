@@ -38,6 +38,10 @@ test('notes are returned as json', async () => {
   expect('json')
 })
 
+test('verifies that the unique identifier property is id', async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.body[0].id).toBeDefined()
+})
 
 afterAll(() => {
   mongoose.connection.close()

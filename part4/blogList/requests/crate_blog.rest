@@ -1,0 +1,10 @@
+post http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+	"_id": "5e276d8cf3997e6a241449a2",
+	"title": "React patterns7",
+	"author": "Michael Chan",
+	"url": "https://reactpatterns.com/",
+	"likes": 7
+  }
