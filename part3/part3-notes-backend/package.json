@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
-  "author": "Matti Luukkainen",
+  "author": "Michal Puchy",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
