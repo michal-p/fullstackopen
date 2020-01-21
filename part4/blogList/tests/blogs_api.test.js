@@ -1,10 +1,22 @@
 const mongoose = require('mongoose')
+// Use the supertest package for writing a test that makes an HTTP GET request to the /api/blogs url. Verify that the blog list application returns the correct amount of blog posts in the JSON format.
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const helper = require('./test_helper')
 
-// Use the supertest package for writing a test that makes an HTTP GET request to the /api/blogs url. Verify that the blog list application returns the correct amount of blog posts in the JSON format.
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  console.log('cleared')
+
+  for (let blog of helper.listOfBlogs) {
+    let blogObject = new Blog(blog)
+    await blogObject.save()
+    console.log('saved')
+  }
+  console.log('done')
+})
 
 /* test by promise */
 // test('notes are returned as json promise', () => {
@@ -20,10 +32,10 @@ const Blog = require('../models/blog')
 
 /* async/await */
 test('notes are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+  const response = await api.get('/api/blogs')
+  expect(response.body.length).toBe(helper.listOfBlogs.length)
+  expect(200)
+  expect('json')
 })
 
 
