@@ -72,6 +72,20 @@ test('check default number for likes is zero', async () => {
     expect(blog.likes).toBe(0)
 })
 
+test('missing url and title', async () => {
+  const newBlog = {
+    title: '', 
+    author: 'Michael Chan', 
+    url: '', 
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
