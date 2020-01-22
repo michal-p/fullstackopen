@@ -18,18 +18,6 @@ beforeEach(async () => {
   console.log('done')
 })
 
-/* test by promise */
-// test('notes are returned as json promise', () => {
-//   api
-//     .get('/api/blogs')
-//     .then(response => {
-//       console.log('promise test')
-//       response.expect('Content-Type', /application\/json/)
-//       response.expect(200)
-//     })
-//     .catch(console.error)
-// })
-
 /* async/await */
 test('notes are returned as json', async () => {
   const response = await api.get('/api/blogs')
@@ -41,6 +29,30 @@ test('notes are returned as json', async () => {
 test('verifies that the unique identifier property is id', async () => {
   const response = await api.get('/api/blogs')
   expect(response.body[0].id).toBeDefined()
+})
+
+test('create a new blog', async () => {
+  const newBlog = {
+    title: 'new blog', 
+    author: 'Michael Chan', 
+    url: 'https://reactpatterns.com/', 
+    likes: 9
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAfterPostTheNewOne = await helper.blogsInDb()
+  expect(blogsAfterPostTheNewOne.length).toBe(helper.listOfBlogs.length + 1)
+  const blogs = blogsAfterPostTheNewOne.map(b => {
+    delete b.id
+    return b
+  })
+  //content
+  expect(blogs).toContainEqual(newBlog)
 })
 
 afterAll(() => {
