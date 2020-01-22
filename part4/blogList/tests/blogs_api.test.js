@@ -55,6 +55,23 @@ test('create a new blog', async () => {
   expect(blogs).toContainEqual(newBlog)
 })
 
+test('check default number for likes is zero', async () => {
+  const newBlog = {
+    title: 'new blog without likes', 
+    author: 'Michael Chan', 
+    url: 'https://reactpatterns.com/', 
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  
+    const blog = await Blog.findById(response.body.id)
+    expect(blog.likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
