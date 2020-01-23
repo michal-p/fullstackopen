@@ -13,78 +13,83 @@ beforeEach(async () => {
   for (let blog of helper.listOfBlogs) {
     let blogObject = new Blog(blog)
     await blogObject.save()
-    console.log('saved')
   }
   console.log('done')
 })
 
-/* async/await */
-test('notes are returned as json', async () => {
-  const response = await api.get('/api/blogs')
-  expect(response.body.length).toBe(helper.listOfBlogs.length)
-  expect(200)
-  expect('json')
-})
-
-test('verifies that the unique identifier property is id', async () => {
-  const response = await api.get('/api/blogs')
-  expect(response.body[0].id).toBeDefined()
-})
-
-test('create a new blog', async () => {
-  const newBlog = {
-    title: 'new blog', 
-    author: 'Michael Chan', 
-    url: 'https://reactpatterns.com/', 
-    likes: 9
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
-
-  const blogsAfterPostTheNewOne = await helper.blogsInDb()
-  expect(blogsAfterPostTheNewOne.length).toBe(helper.listOfBlogs.length + 1)
-  const blogs = blogsAfterPostTheNewOne.map(b => {
-    delete b.id
-    return b
+describe('when there is initially some notes saved', () => {
+  test('notes are returned as json', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(helper.listOfBlogs.length)
+    expect(200)
+    expect('json')
   })
-  //content
-  expect(blogs).toContainEqual(newBlog)
+
+
+  test('create a new blog', async () => {
+    const newBlog = {
+      title: 'new blog', 
+      author: 'Michael Chan', 
+      url: 'https://reactpatterns.com/', 
+      likes: 9
+    }
+    
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    
+    const blogsAfterPostTheNewOne = await helper.blogsInDb()
+    expect(blogsAfterPostTheNewOne.length).toBe(helper.listOfBlogs.length + 1)
+    const blogs = blogsAfterPostTheNewOne.map(b => {
+      delete b.id
+      return b
+    })
+    //content
+    expect(blogs).toContainEqual(newBlog)
+  })
 })
 
-test('check default number for likes is zero', async () => {
-  const newBlog = {
-    title: 'new blog without likes', 
-    author: 'Michael Chan', 
-    url: 'https://reactpatterns.com/', 
-  }
+describe('Check Blog correct properties', () => {
+  test('verifies that the unique identifier property is id', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body[0].id).toBeDefined()
+  })
 
-  const response = await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+  test('check default number for likes is zero', async () => {
+    const newBlog = {
+      title: 'new blog without likes', 
+      author: 'Michael Chan', 
+      url: 'https://reactpatterns.com/', 
+    }
   
-    const blog = await Blog.findById(response.body.id)
-    expect(blog.likes).toBe(0)
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    
+      const blog = await Blog.findById(response.body.id)
+      expect(blog.likes).toBe(0)
+  })
+
+  test('missing url and title', async () => {
+    const newBlog = {
+      title: '', 
+      author: 'Michael Chan', 
+      url: '', 
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
 })
 
-test('missing url and title', async () => {
-  const newBlog = {
-    title: '', 
-    author: 'Michael Chan', 
-    url: '', 
-  }
 
-  const response = await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
-    .expect('Content-Type', /application\/json/)
-})
 
 afterAll(() => {
   mongoose.connection.close()
