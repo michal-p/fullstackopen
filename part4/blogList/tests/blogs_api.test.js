@@ -101,6 +101,16 @@ describe('CRUD operations', () => {
     expect(blogsAtEnd.length).toBe(helper.listOfBlogs.length - 1)
   })
 
+  test('update', async () => {
+    let updatingBlog = new Blog( { ...helper.listOfBlogs[0], likes: 50 } ).toJSON()
+    const updated = await api
+      .put(`/api/blogs/${updatingBlog.id}`)//toJSON
+      .send(updatingBlog)
+      .expect(200)
+
+    expect(updated.body).toEqual(updatingBlog)
+  })
+
 })
 
 afterAll(() => {
