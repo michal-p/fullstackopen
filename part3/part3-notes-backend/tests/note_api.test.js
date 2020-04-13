@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Note = require('../models/note')
-var helper = require('../tests/test_helper');
+var helper = require('../tests/test_helper')
 
 beforeEach(async () => {
   await Note.deleteMany({})
@@ -27,8 +27,8 @@ test('notes are returned as json', async () => {
 })
 //inspecting the response data stored in response.body property. Our tests verify the format and content of the response data with the expect method of Jest.
 test('there are four notes', async () => {
-	// execution gets here only after the HTTP request is complete
-	// the result of HTTP request is saved in variable result
+  // execution gets here only after the HTTP request is complete
+  // the result of HTTP request is saved in variable result
   const response = await api.get('/api/notes')
   expect(response.body.length).toBe(helper.initialNotes.length)
 })
